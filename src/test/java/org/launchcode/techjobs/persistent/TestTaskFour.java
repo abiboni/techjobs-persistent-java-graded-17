@@ -9,7 +9,9 @@ import org.launchcode.techjobs.persistent.controllers.ListController;
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
 import org.launchcode.techjobs.persistent.models.Skill;
+import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
 import org.launchcode.techjobs.persistent.models.data.JobRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -162,7 +164,30 @@ public class TestTaskFour extends AbstractTest {
 //    /*
 //    * Verifies that skillRepository and employerRepository fields have been added to ListController
 //    * */
- }
+    @Test
+    public void testListControllerHasAutowiredRepositories () throws ClassNotFoundException {
+        Class listControllerClass = getClassByName("controllers.ListController");
+        Field employerRepositoryField = null;
+        Field skillRepositoryField = null;
+
+        try {
+            employerRepositoryField = listControllerClass.getDeclaredField("employerRepository");
+        } catch (NoSuchFieldException e) {
+            fail("ListController must have an employerRepository field");
+        }
+
+        assertEquals(EmployerRepository.class, employerRepositoryField.getType());
+        assertNotNull(employerRepositoryField.getAnnotation(Autowired.class));
+
+        try {
+            skillRepositoryField = listControllerClass.getDeclaredField("skillRepository");
+        } catch (NoSuchFieldException e) {
+            fail("ListController must have a skillRepository field");
+        }
+
+        assertEquals(SkillRepository.class, skillRepositoryField.getType());
+        assertNotNull(skillRepositoryField.getAnnotation(Autowired.class));
+    }
 //
 //    /*
 //    * Verifies that ListController.list sets the correct model attributes using skill/employerRepository objects

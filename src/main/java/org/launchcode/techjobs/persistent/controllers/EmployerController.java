@@ -17,6 +17,7 @@ import java.util.Optional;
 public class EmployerController {
     @Autowired
     private EmployerRepository employerRepository;
+
     @GetMapping("/")
     public String index(Model model) {
         List<Employer> employers = (List<Employer>) employerRepository.findAll();
